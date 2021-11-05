@@ -9,7 +9,7 @@ class View:
 
     def home_menu():
         options = ["Start New Tournament", "Load Tournament", "Reports", "Exit"]
-        terminal_menu = TerminalMenu(options, title="Home Menu")
+        terminal_menu = TerminalMenu(options, title="\nHome Menu")
         menu_entry_index = terminal_menu.show()
         return options[menu_entry_index]
 

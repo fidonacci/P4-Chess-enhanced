@@ -53,12 +53,9 @@ class TournamentController:
                                          [second_half_grid[position].get_player_db_id(), ""])
                 tournament.rounds[0].chess_matchs.append(chess_match)
 
-            import pdb
-            pdb.set_trace()
-
         elif round_number > 1:
             ranked_grid = TournamentController.rank_grid(tournament, round_number-1)
-            tournament.rounds[round_number - 1].chess_matchs = []
+            tournament.rounds[round_number-1].chess_matchs = []
 
             while len(ranked_grid) > 0:
 
@@ -202,8 +199,11 @@ class TournamentController:
     def load_db_tournament():
         View.show_db_tournaments_list(TournamentController.list_db_tournaments())
         tournament_id = int(View.load_tournament_prompt())
-
-        tournament = Tournament.get_tournament_by_db_id(tournament_id)
+        try:
+            tournament = Tournament.get_tournament_by_db_id(tournament_id)
+        except TypeError:
+            print('Unrecognized Tournament id, please see valid ids in Saved Tournaments List')
+            return None
 
         choice = View.load_tournament_menu()
 

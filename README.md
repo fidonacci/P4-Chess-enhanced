@@ -25,9 +25,23 @@ On your terminal, in your project directory :
 
 `git clone https://github.com/fidonacci/P4-Chess-enhanced.git`
 
+In the cloned directory, create a virtual environment by running:
 
+`pipenv shell`
 
+Install required packages listed in the pipfile by running:
 
+`pipenv sync`
+<br />
+<br />
+
+## To Run :
+
+To run the program, execute :
+
+`pipenv run python main.py`
+<br />
+<br />
 ## Author
 
 * **Fahd JAMAI** _alias_ [@fidonacci](https://github.com/fidonacci)
