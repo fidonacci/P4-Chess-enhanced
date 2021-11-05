@@ -8,6 +8,7 @@ flake8 = "*"
 tinydb = "*"
 simple-term-menu = "*"
 tabulate = "*"
+flake8-html = "*"
 
 [dev-packages]
 
