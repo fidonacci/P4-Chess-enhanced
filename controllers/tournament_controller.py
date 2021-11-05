@@ -1,4 +1,5 @@
 from models.tournament import NUMBER_OF_ROUNDS, Tournament
+from datetime import datetime
 from models.player import Player
 from models.chess_match import ChessMatch
 from controllers.player_controller import PlayerController
@@ -87,6 +88,8 @@ class TournamentController:
         """Manages user results inputs for a round of a tournament"""
 
         View.prompt_for_round_results(round_number)
+        
+        tournament.rounds[round_number-1].start_time = datetime.now().strftime("%H:%M:%S")
 
         for chess_match in tournament.rounds[round_number-1].chess_matchs:
 
@@ -104,6 +107,8 @@ class TournamentController:
             chess_match.player1[1] = player1_score
 
             chess_match.player2[1] = 1 - player1_score
+
+        tournament.rounds[round_number-1].end_time = datetime.now().strftime("%H:%M:%S")
 
     def calculate_results(tournament: Tournament):
         """Calculates Tournaments results based on all rounds scores and returns a list of players with final scores"""
@@ -208,10 +213,10 @@ class TournamentController:
     def load_db_tournament():
         """Loads an existing tournament and proposes to overwrite rounds results starting a choosen round number"""
         View.show_db_tournaments_list(TournamentController.list_db_tournaments())
-        tournament_id = int(View.load_tournament_prompt())
         try:
+            tournament_id = int(View.load_tournament_prompt())
             tournament = Tournament.get_tournament_by_db_id(tournament_id)
-        except TypeError:
+        except (TypeError, ValueError):
             print('Unrecognized Tournament id, please see valid ids in Saved Tournaments List')
             return None
 
