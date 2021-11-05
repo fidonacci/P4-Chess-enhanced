@@ -45,6 +45,13 @@ class View:
 
         print(tabulate(db_players_list,  headers=['Player Id', 'Player Name', 'Rank']))
 
+    def show_players_list_with_scores(db_players_list: List):
+
+        print("\nSaved Players List".upper())
+        print("##########################")
+
+        print(tabulate(db_players_list,  headers=['Player Id', 'Player Name', 'Rank', 'Score']))
+
     def show_tournament_results(players_ranking_list: List):
 
         print("\nTournament Results List".upper())
@@ -54,7 +61,7 @@ class View:
         for player in players_ranking_list:
             players.append(player)
 
-        print(tabulate(players,  headers=['Player id', 'Name', 'Score']))
+        print(tabulate(players,  headers=['Player id', 'Name', 'Rank', 'Score']))
 
     def show_db_tournaments_list(db_tournaments_list: List):
 

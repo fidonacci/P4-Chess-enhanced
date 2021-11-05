@@ -36,24 +36,26 @@ class MainController():
             sub_choice = View.saved_tournaments_list_options()
 
             if sub_choice == "Show Tournament Players":
-                tournament_id = input("Tournament id to show Players for : ")
+                tournament_id = int(input("Tournament id to show Players for : "))
+
+                tournament_players_list = TournamentController.tournament_players_list(
+                    Tournament.get_tournament_by_db_id(tournament_id))
 
                 sub_choice2 = View.saved_players_list_options()
 
                 if sub_choice2 == "Sort by alphabetical order":
-                    View.show_players_list(sorted(PlayerController.list_players(
-                        Tournament.get_tournament_by_db_id(int(tournament_id)).players), key=lambda player: player[1]))
+                    View.show_players_list_with_scores(sorted(tournament_players_list, key=lambda player: player[1]))
                 elif sub_choice2 == "Sort by players rank":
-                    View.show_players_list(sorted(PlayerController.list_players(Tournament.get_tournament_by_db_id(
-                        int(tournament_id)).players), key=lambda player: player[2], reverse=True))
+                    View.show_players_list_with_scores(
+                        sorted(tournament_players_list, key=lambda player: int(player[2]), reverse=True))
 
             elif sub_choice == "Show Tournament Rounds":
                 try:
                     tournament_id = input("Tournament id to show Rounds for : ")
                     tournament_rounds = Tournament.get_tournament_by_db_id(int(tournament_id)).rounds
                     tournament_rounds_presentation = [[round.name, round.start_time, round.end_time,
-                                                    RoundController.present_round_matchs(round)]
-                                                    for round in tournament_rounds]
+                                                       RoundController.present_round_matchs(round)]
+                                                      for round in tournament_rounds]
                     View.show_rounds_list(sorted(tournament_rounds_presentation, key=lambda round: round[0]))
                 except (ValueError, TypeError):
                     print("Please Enter a valid tournament id and stop trying to crash my program :-)")

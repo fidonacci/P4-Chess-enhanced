@@ -128,12 +128,13 @@ class TournamentController:
                     elif Player.get_player_db_id(player) == int(chess_match[1][0]):
                         player_score += float(chess_match[1][1])
 
-            tournament_players_ranking_list.append([Player.get_player_db_id(player), player.name, player_score])
+            tournament_players_ranking_list.append([Player.get_player_db_id(player),
+                                                    player.name, player.rank, player_score])
 
         sorted_tournament_players_ranking_list = sorted(
             tournament_players_ranking_list, key=lambda x: x[2], reverse=True)
 
-        return View.show_tournament_results(sorted_tournament_players_ranking_list)
+        return sorted_tournament_players_ranking_list
 
     def list_db_tournaments():
         """Returns a list of Tournament instances stored in db"""
@@ -154,7 +155,7 @@ class TournamentController:
             TournamentController.enter_round_results(tournament, round_number)
             tournament.update_tournament()
 
-        TournamentController.calculate_results(tournament)
+        View.show_tournament_results(TournamentController.calculate_results(tournament))
 
     def add_new_player(tournament: Tournament, player_number):
         """Adds a new player by id given in argument to a tournament given in argument"""
@@ -231,6 +232,6 @@ class TournamentController:
             pass
 
     def tournament_players_list(tournament: Tournament):
-        """Returns a list of all players of a specified tournament with choosen information: id, name, rank"""
-        return [[player.get_player_db_id(), player.name, player.rank]
-                for player in tournament.players]
+        """Returns a list of all players of a specified tournament with choosen information: id, name, rank, score"""
+
+        return TournamentController.calculate_results(tournament)
