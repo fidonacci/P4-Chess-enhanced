@@ -6,15 +6,18 @@ from models.player import Player
 
 
 class MainController():
+    """MainController to start the Home Menu"""
 
     def start_new_tournament():
+        """Starts a new Tournament"""
         TournamentController.start_new_tournament()
 
     def load_db_tournament():
+        """Loads an existing saved tournament"""
         TournamentController.load_db_tournament()
 
     def show_reports():
-
+        """Shows reports of saved items: tournaments, players, rounds, matchs"""
         choice = View.reports_menu()
         "Saved Players list",  "Saved Tournaments List"
         if choice == "Saved Players list":
@@ -61,7 +64,7 @@ class MainController():
                 View.show_matchs_list(tournament_matchs_presentation)
 
     def home_menu():
-
+        """Home Menu controller"""
         choice = ""
 
         while not choice == "Exit":

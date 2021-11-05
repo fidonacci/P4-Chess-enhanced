@@ -2,6 +2,7 @@ from models.chess_match import ChessMatch
 
 
 class Round:
+    
     def __init__(self, name) -> None:
         self.name = name
         self.chess_matchs = []

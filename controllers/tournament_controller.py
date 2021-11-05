@@ -6,6 +6,7 @@ from views.view import View
 
 
 class TournamentController:
+    """Holds methods to handle Tournament instances"""
 
     def add_player(tournament: Tournament, player: Player):
         """Adds a player given in agrment to a tournament given in argument"""
@@ -29,6 +30,7 @@ class TournamentController:
         return sorted_round_players
 
     def extract_players(tournament: Tournament, chess_matchs):
+        """Extracts players ids from a match - returns a list of players for each match"""
         matchs_players = []
         for chess_match in chess_matchs:
             matchs_players.append([chess_match[0][0], chess_match[1][0]])
@@ -82,6 +84,7 @@ class TournamentController:
         tournament.update_tournament()
 
     def enter_round_results(tournament: Tournament, round_number: int):
+        """Manages user results inputs for a round of a tournament"""
 
         View.prompt_for_round_results(round_number)
 
@@ -103,6 +106,7 @@ class TournamentController:
             chess_match.player2[1] = 1 - player1_score
 
     def calculate_results(tournament: Tournament):
+        """Calculates Tournaments results based on all rounds scores and returns a list of players with final scores"""
 
         tournament_players_ranking_list = []
 
@@ -115,9 +119,9 @@ class TournamentController:
                 for chess_match in round.chess_matchs:
 
                     if Player.get_player_db_id(player) == int(chess_match[0][0]):
-                        player_score += int(chess_match[0][1])
+                        player_score += float(chess_match[0][1])
                     elif Player.get_player_db_id(player) == int(chess_match[1][0]):
-                        player_score += int(chess_match[1][1])
+                        player_score += float(chess_match[1][1])
 
             tournament_players_ranking_list.append([Player.get_player_db_id(player), player.name, player_score])
 
@@ -127,6 +131,7 @@ class TournamentController:
         return View.show_tournament_results(sorted_tournament_players_ranking_list)
 
     def list_db_tournaments():
+        """Returns a list of Tournament instances stored in db"""
         db_tournaments_instances = Tournament.load_db_tournaments()
         db_tournaments_list = [[tournament.name, tournament.number_of_rounds, tournament.date,
                                 tournament.get_tournament_db_id()]
@@ -134,6 +139,7 @@ class TournamentController:
         return db_tournaments_list
 
     def process_rounds(tournament: Tournament, start_round_number=1, end_round_number=NUMBER_OF_ROUNDS):
+        """Processess rounds generation, round results inputs and show final tournament results"""
 
         for round_number in range(start_round_number, end_round_number+1):
             print("round tour ----------------------------------------------")
@@ -146,10 +152,10 @@ class TournamentController:
         TournamentController.calculate_results(tournament)
 
     def add_new_player(tournament: Tournament, player_number):
-
+        """Adds a new player by id given in argument to a tournament given in argument"""
         saved = False
 
-        while not saved:
+        while not saved:  # handling existing player homonyms thanks to save_player() return
 
             player_values = View.add_player_prompts(player_number)
             player_instance = Player(**player_values)
@@ -160,6 +166,8 @@ class TournamentController:
         tournament.update_tournament()
 
     def choose_players_method(tournament: Tournament, player_number):
+        """Display a menu that permits adding players to a tournamnt by fetching in the db or by adding new player
+         information manually"""
 
         choice = View.choose_player_method_menu()
         if choice == "Select existing player by id":
@@ -185,6 +193,7 @@ class TournamentController:
             TournamentController.add_new_player(tournament, player_number)
 
     def start_new_tournament():
+        """Starts a new tournament with user inputs then process rounds"""
         tournament_values = View.new_tournament_prompts()
         tournament = Tournament(**tournament_values)
         tournament.save_tournament()
@@ -197,6 +206,7 @@ class TournamentController:
         TournamentController.process_rounds(tournament)
 
     def load_db_tournament():
+        """Loads an existing tournament and proposes to overwrite rounds results starting a choosen round number"""
         View.show_db_tournaments_list(TournamentController.list_db_tournaments())
         tournament_id = int(View.load_tournament_prompt())
         try:
@@ -216,6 +226,6 @@ class TournamentController:
             pass
 
     def tournament_players_list(tournament: Tournament):
-
+        """Returns a list of all players of a specified tournament with choosen information: id, name, rank"""
         return [[player.get_player_db_id(), player.name, player.rank]
                 for player in tournament.players]

@@ -6,6 +6,7 @@ PlayerQuery = Query()
 
 
 class Player:
+    """Player Model with attributes according to specifications"""
 
     def __init__(self, first_name="", last_name="", birth_date="", sex="", rank="") -> None:
 

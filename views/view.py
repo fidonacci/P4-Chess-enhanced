@@ -6,6 +6,7 @@ from tabulate import tabulate
 
 
 class View:
+    """Terminal prints and menus as a View of the program"""
 
     def home_menu():
         options = ["Start New Tournament", "Load Tournament", "Reports", "Exit"]

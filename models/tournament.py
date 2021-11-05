@@ -10,6 +10,7 @@ NUMBER_OF_ROUNDS = 4
 
 
 class Tournament:
+    """Tournament model"""
 
     def __init__(self,
                  name="",

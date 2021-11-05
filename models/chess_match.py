@@ -2,6 +2,7 @@ from typing import List, NamedTuple
 
 
 class ChessMatch(NamedTuple):
+    """Chess Match model as an imposed tuple of two lists according to specifications"""
 
     player1: List
     player2: List
