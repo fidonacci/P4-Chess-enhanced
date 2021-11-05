@@ -15,4 +15,3 @@ class ChessMatch(NamedTuple):
     @staticmethod
     def unserialize(match_dict):
         return ChessMatch(player1=match_dict['player1'], player2=match_dict['player2'])
-

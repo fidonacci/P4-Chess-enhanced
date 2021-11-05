@@ -85,7 +85,8 @@ class View:
 
             tournament_date = date.today().strftime("%d/%m/%Y")
 
-        while not bool(re.search(r"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$", tournament_date)):
+        while not bool(re.search(r"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$",
+                                 tournament_date)):
 
             print("Not a proper date format! Try a date format DD/MM/YYYY")
             tournament_date = input("Tournament date (system date if left empty) :")
