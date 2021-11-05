@@ -48,12 +48,16 @@ class MainController():
                         int(tournament_id)).players), key=lambda player: player[2], reverse=True))
 
             elif sub_choice == "Show Tournament Rounds":
-                tournament_id = input("Tournament id to show Rounds for : ")
-                tournament_rounds = Tournament.get_tournament_by_db_id(int(tournament_id)).rounds
-                tournament_rounds_presentation = [[round.name, round.start_time, round.end_time,
-                                                   RoundController.present_round_matchs(round)]
-                                                  for round in tournament_rounds]
-                View.show_rounds_list(sorted(tournament_rounds_presentation, key=lambda round: round[0]))
+                try:
+                    tournament_id = input("Tournament id to show Rounds for : ")
+                    tournament_rounds = Tournament.get_tournament_by_db_id(int(tournament_id)).rounds
+                    tournament_rounds_presentation = [[round.name, round.start_time, round.end_time,
+                                                    RoundController.present_round_matchs(round)]
+                                                    for round in tournament_rounds]
+                    View.show_rounds_list(sorted(tournament_rounds_presentation, key=lambda round: round[0]))
+                except (ValueError, TypeError):
+                    print("Please Enter a valid tournament id and stop trying to crash my program :-)")
+                    return None
 
             elif sub_choice == "Show Tournament Matchs":
                 tournament_id = input("Tournament id to show Matchs for : ")
