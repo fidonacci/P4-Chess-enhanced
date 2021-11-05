@@ -15,6 +15,7 @@ class RoundController():
             player2_name = Player.get_player_by_db_id(match.player2[0]).name
             player2_score = match.player2[1]
 
-            matchs_presentation_string += f"\nPlayer 1 : {player1_name} vs .Player 2 : {player2_name} Result : {player1_score} - {player2_score}"
+            matchs_presentation_string += f"\nPlayer 1 : {player1_name} vs .Player 2 : {player2_name} \
+                                            Result : {player1_score} - {player2_score}"
 
         return matchs_presentation_string

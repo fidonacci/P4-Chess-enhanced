@@ -205,7 +205,7 @@ class View:
         print("\nTournament Rounds List".upper())
         print("##########################")
 
-        print(tabulate(tournament_rounds_list,  headers=['Round name',"Start Time", "End Time", 'Matchs']))
+        print(tabulate(tournament_rounds_list,  headers=['Round name', 'Start Time', 'End Time', 'Matchs']))
 
     def show_matchs_list(tournament_matchs_list):
         print("\nTournament Rounds List".upper())

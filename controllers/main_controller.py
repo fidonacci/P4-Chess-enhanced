@@ -50,7 +50,9 @@ class MainController():
             elif sub_choice == "Show Tournament Rounds":
                 tournament_id = input("Tournament id to show Rounds for : ")
                 tournament_rounds = Tournament.get_tournament_by_db_id(int(tournament_id)).rounds
-                tournament_rounds_presentation = [[round.name, round.start_time, round.end_time, RoundController.present_round_matchs(round)] for round in tournament_rounds]
+                tournament_rounds_presentation = [[round.name, round.start_time, round.end_time,
+                                                   RoundController.present_round_matchs(round)]
+                                                  for round in tournament_rounds]
                 View.show_rounds_list(sorted(tournament_rounds_presentation, key=lambda round: round[0]))
 
             elif sub_choice == "Show Tournament Matchs":

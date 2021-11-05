@@ -88,7 +88,7 @@ class TournamentController:
         """Manages user results inputs for a round of a tournament"""
 
         View.prompt_for_round_results(round_number)
-        
+
         tournament.rounds[round_number-1].start_time = datetime.now().strftime("%H:%M:%S")
 
         for chess_match in tournament.rounds[round_number-1].chess_matchs:
