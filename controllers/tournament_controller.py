@@ -2,6 +2,7 @@ from models.tournament import NUMBER_OF_ROUNDS, Tournament
 from datetime import datetime
 from models.player import Player
 from models.chess_match import ChessMatch
+from controllers.round_controller import RoundController
 from controllers.player_controller import PlayerController
 from views.view import View
 
@@ -52,8 +53,8 @@ class TournamentController:
 
             for position in range(len(first_half_grid)):
 
-                chess_match = ChessMatch([first_half_grid[position].get_player_db_id(), ""],
-                                         [second_half_grid[position].get_player_db_id(), ""])
+                chess_match = ChessMatch([first_half_grid[position].get_player_db_id(), 0],
+                                         [second_half_grid[position].get_player_db_id(), 0])
                 tournament.rounds[0].chess_matchs.append(chess_match)
 
         elif round_number > 1:
@@ -98,11 +99,14 @@ class TournamentController:
 
             match_description = f"{player1_name} to {player2_name}"
 
-            player1_score = float(View.prompt_for_match_result_player1(match_description))
-
-            while player1_score not in [0, 0.5, 1]:
-                print("Score should be 0 or 0.5 or 1")
+            try:
                 player1_score = float(View.prompt_for_match_result_player1(match_description))
+
+                while player1_score not in [0, 0.5, 1]:
+                    print("Score should be 0 or 0.5 or 1")
+                    player1_score = float(View.prompt_for_match_result_player1(match_description))
+            except ValueError:
+                print("Score should be 0 or 0.5 or 1")
 
             chess_match.player1[1] = player1_score
 
@@ -124,15 +128,15 @@ class TournamentController:
                 for chess_match in round.chess_matchs:
 
                     if Player.get_player_db_id(player) == int(chess_match[0][0]):
-                        player_score += float(chess_match[0][1])
+                        player_score += float(chess_match[0][1] if not chess_match[0][1] == '' else 0)
                     elif Player.get_player_db_id(player) == int(chess_match[1][0]):
-                        player_score += float(chess_match[1][1])
+                        player_score += float(chess_match[1][1] if not chess_match[1][1] == '' else 0)
 
             tournament_players_ranking_list.append([Player.get_player_db_id(player),
                                                     player.name, player.rank, player_score])
 
         sorted_tournament_players_ranking_list = sorted(
-            tournament_players_ranking_list, key=lambda x: x[2], reverse=True)
+            tournament_players_ranking_list, key=lambda x: float(x[2]), reverse=True)
 
         return sorted_tournament_players_ranking_list
 
@@ -193,7 +197,7 @@ class TournamentController:
                 return False
 
         elif choice == "Show existing players list":
-            View.show_players_list(PlayerController.list_db_players())
+            View.show_players_list(PlayerController.list_players())
             return False
         elif choice == "Add a new Player":
             TournamentController.add_new_player(tournament, player_number)
@@ -211,27 +215,34 @@ class TournamentController:
 
         TournamentController.process_rounds(tournament)
 
+    def tournament_players_list(tournament: Tournament):
+        """Returns a list of all players of a specified tournament with choosen information: id, name, rank, score"""
+
+        return TournamentController.calculate_results(tournament)
+
     def load_db_tournament():
         """Loads an existing tournament and proposes to overwrite rounds results starting a choosen round number"""
         View.show_db_tournaments_list(TournamentController.list_db_tournaments())
         try:
             tournament_id = int(View.load_tournament_prompt())
             tournament = Tournament.get_tournament_by_db_id(tournament_id)
+            tournament_rounds = Tournament.get_tournament_by_db_id(int(tournament_id)).rounds
+            tournament_rounds_presentation = [[round.name, round.start_time, round.end_time,
+                                               RoundController.present_round_matchs(round)]
+                                              for round in tournament_rounds]
+            View.show_rounds_list(sorted(tournament_rounds_presentation, key=lambda round: round[0]))
         except (TypeError, ValueError):
             print('Unrecognized Tournament id, please see valid ids in Saved Tournaments List')
             return None
 
         choice = View.load_tournament_menu()
 
-        if choice == "Overwrite rounds starting Round number":
+        if choice == "Modify Players":
+            TournamentController.tournament_players_list(tournament)
 
+        elif choice == "Modify Matchs results starting Round number":
             round_number = int(input("Round number to start with : "))
             TournamentController.process_rounds(tournament, round_number)
 
         elif choice == "Back to Home Menu":
             pass
-
-    def tournament_players_list(tournament: Tournament):
-        """Returns a list of all players of a specified tournament with choosen information: id, name, rank, score"""
-
-        return TournamentController.calculate_results(tournament)

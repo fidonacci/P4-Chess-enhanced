@@ -179,7 +179,7 @@ class View:
         return input("\nEnter tournament id to load : ")
 
     def load_tournament_menu():
-        options = ["Overwrite rounds starting Round number",  "Back to Home Menu"]
+        options = ["Modify Players", "Modify Matchs results starting Round number",  "Back to Home Menu"]
         terminal_menu = TerminalMenu(options, title="\nLoaded Tournament Menu")
         menu_entry_index = terminal_menu.show()
         return options[menu_entry_index]
@@ -191,7 +191,7 @@ class View:
         return options[menu_entry_index]
 
     def saved_tournaments_list_options():
-        options = ["Show Tournament Players",  "Show Tournament Rounds", "Show Tournament Matchs"]
+        options = ["Show Tournament Players",  "Show Tournament Rounds", "Show Tournament Matchs", "Delete Tournament"]
         terminal_menu = TerminalMenu(options, title="\nLoaded Tournament Menu")
         menu_entry_index = terminal_menu.show()
         return options[menu_entry_index]
@@ -215,7 +215,7 @@ class View:
         print(tabulate(tournament_rounds_list,  headers=['Round name', 'Start Time', 'End Time', 'Matchs']))
 
     def show_matchs_list(tournament_matchs_list):
-        print("\nTournament Rounds List".upper())
+        print("\nTournament Matchs List".upper())
         print("##########################")
 
         print(tabulate(tournament_matchs_list,  headers=['Player 1', 'Score Player 1', 'Player 2', 'Score Player 2']))
