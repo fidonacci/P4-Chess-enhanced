@@ -10,7 +10,6 @@ class RoundController():
         matchs_presentation_string = ""
 
         for match in round.chess_matchs:
-            import pdb; pdb.set_trace()
             player1_name = Player.get_player_by_db_id(match.player1[0]).name
             player1_score = match.player1[1]
             player2_name = Player.get_player_by_db_id(match.player2[0]).name
