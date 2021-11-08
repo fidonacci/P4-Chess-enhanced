@@ -22,12 +22,25 @@ class MainController():
         choice = View.reports_menu()
         "Saved Players list",  "Saved Tournaments List"
         if choice == "Saved Players list":
+
             sub_choice = View.saved_players_list_options()
             if sub_choice == "Sort by alphabetical order":
-                View.show_players_list(sorted(PlayerController.list_players(), key=lambda player: player[1]))
+                View.show_players_list(sorted(PlayerController.list_players(
+                    Player.load_db_players()), key=lambda player: player[1]))
             elif sub_choice == "Sort by players rank":
-                View.show_players_list(sorted(PlayerController.list_players(),
+                View.show_players_list(sorted(PlayerController.list_players(Player.load_db_players()),
                                               key=lambda player: player[2], reverse=True))
+
+            sub_choice2 = View.saved_players_list_options_after_show()
+
+            if sub_choice2 == "Add Player":
+                PlayerController.add_player_to_db()
+
+            elif sub_choice2 == "Modify Player":
+                PlayerController.modify_player_by_id()
+
+            elif sub_choice2 == "Back to Home Menu":
+                pass
 
         elif choice == "Saved Tournaments List":
             View.show_db_tournaments_list(
@@ -36,18 +49,23 @@ class MainController():
             sub_choice = View.saved_tournaments_list_options()
 
             if sub_choice == "Show Tournament Players":
-                tournament_id = int(input("Tournament id to show Players for : "))
 
-                tournament_players_list = TournamentController.tournament_players_list(
-                    Tournament.get_tournament_by_db_id(tournament_id))
+                try:
+                    tournament_id = int(input("Tournament id to show Players for : "))
 
-                sub_choice2 = View.saved_players_list_options()
+                    tournament_players_list = TournamentController.tournament_players_list(
+                        Tournament.get_tournament_by_db_id(tournament_id))
 
-                if sub_choice2 == "Sort by alphabetical order":
-                    View.show_players_list_with_scores(sorted(tournament_players_list, key=lambda player: player[1]))
-                elif sub_choice2 == "Sort by players rank":
-                    View.show_players_list_with_scores(
-                        sorted(tournament_players_list, key=lambda player: int(player[2]), reverse=True))
+                    sub_choice2 = View.saved_players_list_options()
+
+                    if sub_choice2 == "Sort by alphabetical order":
+                        View.show_players_list_with_scores(
+                            sorted(tournament_players_list, key=lambda player: player[1]))
+                    elif sub_choice2 == "Sort by players rank":
+                        View.show_players_list_with_scores(
+                            sorted(tournament_players_list, key=lambda player: int(player[2]), reverse=True))
+                except (ValueError, IndexError, TypeError):
+                    print("Invalid tournament id")
 
             elif sub_choice == "Show Tournament Rounds":
                 try:
@@ -62,15 +80,19 @@ class MainController():
                     return None
 
             elif sub_choice == "Show Tournament Matchs":
-                tournament_id = input("Tournament id to show Matchs for : ")
-                tournament_matchs = []
-                for round in Tournament.get_tournament_by_db_id(int(tournament_id)).rounds:
-                    tournament_matchs += round.chess_matchs
-                tournament_matchs_presentation = [[Player.get_player_by_db_id(match[0][0]), match[0][1],
-                                                  Player.get_player_by_db_id(match[1][0]), match[1][1]]
-                                                  for match in tournament_matchs]
+                try:
+                    tournament_id = input("Tournament id to show Matchs for : ")
+                    tournament_matchs = []
+                    for round in Tournament.get_tournament_by_db_id(int(tournament_id)).rounds:
+                        tournament_matchs += round.chess_matchs
+                    tournament_matchs_presentation = [[Player.get_player_by_db_id(match[0][0]), match[0][1],
+                                                       Player.get_player_by_db_id(match[1][0]), match[1][1]]
+                                                      for match in tournament_matchs]
 
-                View.show_matchs_list(tournament_matchs_presentation)
+                    View.show_matchs_list(tournament_matchs_presentation)
+                except (ValueError, TypeError):
+                    print("Please Enter a valid tournament id and stop trying to crash my program :-)")
+                    return None
 
     def home_menu():
         """Home Menu controller"""

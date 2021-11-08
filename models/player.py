@@ -53,6 +53,15 @@ class Player:
             print("Player already existing in the database - Resubmit current player")
             return False
 
+    def update_player(self, player_values):
+        """Overwites a Player storage in the database based on the new values of the Player instance"""
+        player_id = self.get_player_db_id()
+        players_table.update(player_values, doc_ids=[player_id])
+        players_table.update({'name': player_values['first_name'] + " " +
+                             player_values['last_name']}, doc_ids=[player_id])
+
+        return True
+
     def get_player_db_id(self):
         return players_table.get(PlayerQuery.name == self.name).doc_id
 

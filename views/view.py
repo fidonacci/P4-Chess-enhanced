@@ -122,17 +122,17 @@ class View:
 
     def choose_player_method_menu():
         options = ["Select existing player by id", "Show existing players list", "Add a new Player"]
-        terminal_menu = TerminalMenu(options, title="Loaded Tournament Menu")
+        terminal_menu = TerminalMenu(options, title=" Add Player Menu")
         menu_entry_index = terminal_menu.show()
         return options[menu_entry_index]
 
-    def player_adding_titile(player_number):
+    def player_adding_title(player_number):
         print(f"\nPlayer {player_number}".upper())
         print("##########################")
 
-    def add_player_prompts(player_number):
+    def add_player_prompts(player_number="New Player"):
 
-        View.player_adding_titile(player_number)
+        View.player_adding_title(player_number)
 
         # Taking a free string as a first name
 
@@ -185,8 +185,14 @@ class View:
         return options[menu_entry_index]
 
     def saved_players_list_options():
-        options = ["Sort by alphabetical order",  "Sort by players rank", ]
-        terminal_menu = TerminalMenu(options, title="\nLoaded Tournament Menu")
+        options = ["Sort by alphabetical order",  "Sort by players rank"]
+        terminal_menu = TerminalMenu(options, title="\nTournament Players List Menu")
+        menu_entry_index = terminal_menu.show()
+        return options[menu_entry_index]
+
+    def saved_players_list_options_after_show():
+        options = ["Add Player",  "Modify Player", "Back to Home Menu"]
+        terminal_menu = TerminalMenu(options, title="\nPlayers Management Options")
         menu_entry_index = terminal_menu.show()
         return options[menu_entry_index]
 
@@ -198,13 +204,13 @@ class View:
 
     def saved_tournaments_players_list_options():
         options = ["Sort by alphabetical order",  "Sort by players rank"]
-        terminal_menu = TerminalMenu(options, title="\nLoaded Tournament Menu")
+        terminal_menu = TerminalMenu(options, title="\nTournament Players List")
         menu_entry_index = terminal_menu.show()
         return options[menu_entry_index]
 
     def reports_menu():
         options = ["Saved Players list",  "Saved Tournaments List"]
-        terminal_menu = TerminalMenu(options, title="\nLoaded Tournament Menu")
+        terminal_menu = TerminalMenu(options, title="\nReports Menu")
         menu_entry_index = terminal_menu.show()
         return options[menu_entry_index]
 

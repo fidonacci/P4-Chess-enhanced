@@ -62,7 +62,13 @@ class Tournament:
 
     def save_tournament(self):
         """Stores a tournament instance in the database"""
-        tournaments_table.insert(self.serialize())
+        if tournaments_table.get(TournamentQuery.name == self.name) is None and (self.name != ""):
+            tournaments_table.insert(self.serialize())
+            return True
+        else:
+            print("Tournament name empty or already existing in the database - \
+                Try to modify tournament name or load it")
+            return False
 
     def get_tournament_db_id(self):
         """Gets the id given by Tinydb to the instance storage"""

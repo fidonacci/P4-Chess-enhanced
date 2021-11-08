@@ -99,18 +99,22 @@ class TournamentController:
 
             match_description = f"{player1_name} to {player2_name}"
 
-            try:
-                player1_score = float(View.prompt_for_match_result_player1(match_description))
+            valid_score = False
 
-                while player1_score not in [0, 0.5, 1]:
-                    print("Score should be 0 or 0.5 or 1")
+            while not valid_score:
+                try:
                     player1_score = float(View.prompt_for_match_result_player1(match_description))
-            except ValueError:
-                print("Score should be 0 or 0.5 or 1")
+                    while player1_score not in [0, 0.5, 1]:
+                        print("Score should be 0 or 0.5 or 1")
+                        player1_score = float(View.prompt_for_match_result_player1(match_description))
 
-            chess_match.player1[1] = player1_score
+                    valid_score = True
+                    chess_match.player1[1] = player1_score
+                    chess_match.player2[1] = 1 - player1_score
 
-            chess_match.player2[1] = 1 - player1_score
+                except ValueError:
+                    print("Score should be 0 or 0.5 or 1")
+                    valid_score = False
 
         tournament.rounds[round_number-1].end_time = datetime.now().strftime("%H:%M:%S")
 
@@ -136,7 +140,7 @@ class TournamentController:
                                                     player.name, player.rank, player_score])
 
         sorted_tournament_players_ranking_list = sorted(
-            tournament_players_ranking_list, key=lambda x: float(x[2]), reverse=True)
+            tournament_players_ranking_list, key=lambda x: float(x[3]), reverse=True)
 
         return sorted_tournament_players_ranking_list
 
@@ -152,7 +156,6 @@ class TournamentController:
         """Processess rounds generation, round results inputs and show final tournament results"""
 
         for round_number in range(start_round_number, end_round_number+1):
-            print("round tour ----------------------------------------------")
             TournamentController.generate_round_matchs(tournament, round_number)
             tournament.update_tournament()
 
@@ -180,8 +183,10 @@ class TournamentController:
          information manually"""
 
         choice = View.choose_player_method_menu()
+
         if choice == "Select existing player by id":
-            View.player_adding_titile(player_number)
+
+            View.player_adding_title(player_number)
             player_id = input("\n Id of the Player to add : ")
 
             try:
@@ -192,21 +197,26 @@ class TournamentController:
 
                 else:
                     TournamentController.add_player(tournament, player_instance)
-            except TypeError:
+            except (TypeError, ValueError):
                 print("Unexisting player id please take a look to the players list")
                 return False
 
         elif choice == "Show existing players list":
-            View.show_players_list(PlayerController.list_players())
+            View.show_players_list(PlayerController.list_players(Player.load_db_players()))
             return False
+
         elif choice == "Add a new Player":
             TournamentController.add_new_player(tournament, player_number)
 
     def start_new_tournament():
         """Starts a new tournament with user inputs then process rounds"""
-        tournament_values = View.new_tournament_prompts()
-        tournament = Tournament(**tournament_values)
-        tournament.save_tournament()
+
+        saved = False
+
+        while not saved:  # handling existing tournament homonyms thanks to save_tournament() return
+            tournament_values = View.new_tournament_prompts()
+            tournament = Tournament(**tournament_values)
+            saved = tournament.save_tournament()
 
         for player_number in range(8):
             valid_player = False
