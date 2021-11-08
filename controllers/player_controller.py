@@ -32,5 +32,5 @@ class PlayerController:
                 player_values = View.add_player_prompts()
                 saved = player.update_player(player_values)
 
-        except (ValueError):
+        except (ValueError, TypeError):
             print("Invalid Player Id")
