@@ -235,8 +235,6 @@ class TournamentController:
         View.show_db_tournaments_list(TournamentController.list_db_tournaments())
         try:
             tournament_id = int(View.load_tournament_prompt())
-            import pdb
-            pdb.set_trace()
             tournament = Tournament.get_tournament_by_db_id(tournament_id)
             tournament_rounds = Tournament.get_tournament_by_db_id(int(tournament_id)).rounds
             tournament_rounds_presentation = [[round.name, round.start_time, round.end_time,

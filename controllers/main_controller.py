@@ -29,7 +29,7 @@ class MainController():
                     Player.load_db_players()), key=lambda player: player[1]))
             elif sub_choice == "Sort by players rank":
                 View.show_players_list(sorted(PlayerController.list_players(Player.load_db_players()),
-                                              key=lambda player: player[2], reverse=True))
+                                              key=lambda player: int(player[2]), reverse=True))
 
             sub_choice2 = View.saved_players_list_options_after_show()
 
